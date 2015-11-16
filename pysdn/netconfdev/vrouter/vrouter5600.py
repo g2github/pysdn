@@ -505,6 +505,27 @@ class VRouter5600(NetconfNode):
             status.set_status(STATUS.HTTP_ERROR, resp)
         return Result(status, cfg)
 
+    def set_dataplane_interface_vif_cfg(self, vif):
+        assert(isinstance(static_route, StaticRoute))
+        status = OperStatus()
+        ctrl = self.ctrl
+        headers = {'content-type': 'application/yang.data+json'}
+        url = ctrl.get_ext_mount_config_url(self.name)
+        obj = static_route
+        payload = obj.get_payload()
+        ext = static_route.get_url_extension()
+        url += ext
+        resp = ctrl.http_put_request(url, payload, headers)
+        if(resp is None):
+            status.set_status(STATUS.CONN_ERROR)
+        elif(resp.content is None):
+            status.set_status(STATUS.CTRL_INTERNAL_ERROR)
+        elif (resp.status_code == 200 or resp.status_code == 204):
+            status.set_status(STATUS.OK)
+        else:
+            status.set_status(STATUS.HTTP_ERROR, resp)
+        return Result(status, None)
+
     def get_loopback_interfaces_list(self):
         """ Return a list of loopback interfaces on the VRouter5600
          :return: A tuple:  Status, list of loopback interface names
@@ -831,3 +852,38 @@ class VRouter5600(NetconfNode):
         templateModelRef = "vyatta-protocols-static:static/interface-route/{}"
         model_ref = templateModelRef.format(ip_prefix.replace("/", "%2F"))
         return self.delete_protocols_cfg(model_ref)
+
+    def set_vif_cfg(self, vif):
+        """ Create/update VPN configuration
+         :param vpn: instance of the 'Vpn' class
+        :return: A tuple: Status, None
+        :rtype: instance of the `Result` class
+         - STATUS.CONN_ERROR: If the controller did not respond.
+        - STATUS.CTRL_INTERNAL_ERROR: If the controller responded but did not
+                                      provide any status.
+        - STATUS.OK: Success. Result is valid.
+        - STATUS.HTTP_ERROR: If the controller responded with an error
+                             status code.
+         """
+        status = OperStatus()
+        ctrl = self.ctrl
+        headers = {'content-type': 'application/yang.data+json'}
+        url = ctrl.get_ext_mount_config_url(self.name)
+        ext = vif.get_url_extension()
+        url += ext
+        payload = vif.get_payload()
+
+        # ext = vpn.get_url_extension()
+        # url += ext
+        # payload = vpn.get_payload()
+        resp = ctrl.http_put_request(url, payload, headers)
+        if(resp is None):
+            status.set_status(STATUS.CONN_ERROR)
+        elif(resp.content is None):
+            status.set_status(STATUS.CTRL_INTERNAL_ERROR)
+        elif (resp.status_code == 200 or resp.status_code == 204):
+            status.set_status(STATUS.OK)
+        else:
+            status.set_status(STATUS.HTTP_ERROR, resp)
+        return Result(status, None)
+

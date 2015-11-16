@@ -49,6 +49,7 @@ from pysdn.common.utils import (strip_none,
 
 class DataPlaneInterface():
     ''' Class representing a dataplane interface '''
+    _mn1 = "vyatta-interfaces:interfaces"
 
     def __init__(self, name):
         ''' Dataplane interface name '''
@@ -147,6 +148,22 @@ class DataPlaneInterface():
     # TBD
     def set_bridge_group(self, TBD):
         pass
+
+    def get_payload(self):
+        """ Return this object as a payload for HTTP request """
+        s = self.to_json()
+        obj = json.loads(s)
+        obj1 = strip_none(obj)
+        obj2 = remove_empty_from_dict(obj1)
+        obj3 = dict_keys_underscored_to_dashed(obj2)
+        payload = {self._mn1: [obj3]}
+        return json.dumps(payload, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
+
+    def get_url_extension(self):
+        s = ("%s/%s") % (self._mn1, self.tagnode)
+        return s
+
 
 
 class OpenVpnInterface():
