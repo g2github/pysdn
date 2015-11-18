@@ -41,15 +41,28 @@ interfaces.py: Interface specific properties and access methods
 """
 
 import json
+import urllib2
 
 from pysdn.common.utils import (strip_none,
                                 remove_empty_from_dict,
                                 dict_keys_underscored_to_dashed)
 
 
+
+"""
+interfaces {
+        dataplane interface-name {
+        vif vif-id
+    }
+}
+"""
+
+
+
 class DataPlaneInterface():
     ''' Class representing a dataplane interface '''
     _mn1 = "vyatta-interfaces:interfaces"
+    _mn2 = "vyatta-interfaces-dataplane:dataplane"
 
     def __init__(self, name):
         ''' Dataplane interface name '''
@@ -155,13 +168,13 @@ class DataPlaneInterface():
         obj = json.loads(s)
         obj1 = strip_none(obj)
         obj2 = remove_empty_from_dict(obj1)
-        obj3 = dict_keys_underscored_to_dashed(obj2)
-        payload = {self._mn1: [obj3]}
+#        obj3 = dict_keys_underscored_to_dashed(obj2)
+        payload = {self._mn1: [obj2]}
         return json.dumps(payload, default=lambda o: o.__dict__,
                           sort_keys=True, indent=4)
 
     def get_url_extension(self):
-        s = ("%s/%s") % (self._mn1, self.tagnode)
+        s = ("%s/%s/%s") % (self._mn1, self._mn2, self.tagnode)
         return s
 
 
@@ -394,3 +407,107 @@ class VirtualTunnelInterface():
 
     def set_address(self, address):
         self.address.append(address)
+
+
+"""
+(config)vifPOST
+        {
+            mtu (integer, optional),
+            ipv6 (object[(config)ipv6], optional),
+            firewall (object[(config)firewall], optional),
+            bridge-group (object[(config)bridge-group], optional),
+            description (string, optional),
+            tagnode (integer, optional),
+            vlan (integer, optional),
+            policy (object[(config)policy], optional),
+            disable (object, optional),
+            ip (object[(config)ip], optional)
+        }
+"""
+
+# class VirtualInterface():
+#     # Class representing a Virtual Interface (VIF)
+#     _mn1 = "vyatta-interfaces:interfaces"
+#     _mn2 = "vyatta-interfaces-dataplane:dataplane"
+#     _mn3 = "vif"
+#
+#
+#     def __init__(self, name):
+#         # Maximum Transmission Unit (MTU), range 68..9000
+#         self.mtu = None
+#
+#         # IPv6 parameters
+#         self.ipv6 = []
+#
+#         # Interface Firewall
+#         self.firewall = None
+#
+#         # Description for the interface
+#         self.description = None
+#
+#         # Virtual Interface ID
+#         self.tagnode = name
+#
+#         # Virtual Interface ID
+#         self.vlan = None
+#
+#         # Virtual Interface ID
+#         self.policy = None
+#
+#         # Disable this interface
+#         self.disable = None
+#
+#         # IPv4 parameters
+#         self.ip = []
+#
+#     def to_string(self):
+#         """ Return this object as a string """
+#         return str(vars(self))
+#
+#     def to_json(self):
+#         """ Return this object as JSON """
+#         return json.dumps(self, default=lambda o: o.__dict__,
+#                           sort_keys=True, indent=4)
+#
+#     def set_mtu(self, mtu):
+#         self.mtu = mtu
+#
+#     def set_ipv6(self, ipv6):
+#         self.ipv6.append(ipv6)
+#
+#     def set_firewall(self, firewall):
+#         self.firewall = firewall
+#
+#     def set_description(self, description):
+#         self.description = description
+#
+#     def set_vlan(self, vlan):
+#         self.vlan = vlan
+#
+#     def set_policy(self, policy):
+#         self.policy = policy
+#
+#     def set_disable(self, value):
+#         if (value):
+#             self.disable = ""
+#         else:
+#             self.disable = None
+#
+#     def set_ip(self, ip):
+#         self.ip.append(ip)
+#
+#     def get_payload(self):
+#         """ Return this object as a payload for HTTP request """
+#         s = self.to_json()
+#         d1 = json.loads(s)
+#         d2 = remove_empty_from_dict(d1)
+#         payload = {self._mn3: [d2]}
+#         return json.dumps(payload, default=lambda o: o.__dict__,
+#                           sort_keys=True, indent=4)
+#
+#     def get_url_extension(self, dp):
+#         d1 = (self._mn1 + "/" + self._mn2 + "/")
+#         d2 = (d1 + dp + "/" + self._mn3  + "/")
+#         print( self.tagnode)
+#         d3 = (d2 + str(self.tagnode))
+#         return (d3)

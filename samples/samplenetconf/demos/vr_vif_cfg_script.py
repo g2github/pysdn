@@ -45,6 +45,7 @@ import json
 from pysdn.controller.controller import Controller
 from pysdn.netconfdev.vrouter.vrouter5600 import VRouter5600
 from pysdn.netconfdev.vrouter.interfaces import DataPlaneInterface
+#from pysdn.netconfdev.vrouter.interfaces import VirtualInterface
 
 from pysdn.common.status import STATUS
 from pysdn.common.utils import load_dict_from_file
@@ -71,6 +72,7 @@ if __name__ == "__main__":
         nodePswd = d['nodePswd']
 
         interfaceName = d['interfaceName']
+
         vifId = d['vifId']
     except:
         print ("Failed to get Controller and Node device attributes from Configuration file %s" % f)
@@ -127,11 +129,12 @@ if __name__ == "__main__":
     print "\n"
     user_input = raw_input("Press any key to add the vif to the '%s': " % nodeName)
 
-    virtualInterface = DataPlaneInterface(interfaceName)
-    virtualInterface.address = nodeIpAddr
-    virtualInterface.vif = vifId
-    vrouter.set_vif_cfg(virtualInterface)
+#    virtualInterface = VirtualInterface(vifId)
+#    vrouter.add_modify_vif_instance(virtualInterface, interfaceName)
 
+    virtualInterface = DataPlaneInterface(interfaceName)
+    virtualInterface.vif = vifId
+    vrouter.set_dataplane_interface_vif_cfg(virtualInterface)
 
     # wait on input
     print "\n"

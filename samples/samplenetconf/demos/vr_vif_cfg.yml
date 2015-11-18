@@ -73,5 +73,4 @@ nodePswd: "vyatta"
 interfaceName: "dp0p192p1"
 loopback: "lo1"
 
-
 vifId: 40
