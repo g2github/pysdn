@@ -102,19 +102,19 @@ if __name__ == "__main__":
     # Build a tunnel between the VTEP Hypervisors
     overlay_manager.create_tunnel_between_two_hypervisors("g2_tunnel", doo['vniId_1'], vtep_hvsrA, vtep_hvsrB)
 
-    # wait on input
-    print "\n"
-    user_input = raw_input("Press any key to get first hypervisor details: ")
-
-    # View VTEP Hypervisor #1 details
-    overlay_manager.get_hypervisor_details(vtep_hvsrA)
-
-    # wait on input
-    print "\n"
-    user_input = raw_input("Press any key to get second hypervisor details: ")
-
-    # View VTEP Hypervisor #2 details
-    overlay_manager.get_hypervisor_details(vtep_hvsrB)
+    # # wait on input
+    # print "\n"
+    # user_input = raw_input("Press any key to get first hypervisor details: ")
+    #
+    # # View VTEP Hypervisor #1 details
+    # overlay_manager.get_hypervisor_details(vtep_hvsrA)
+    #
+    # # wait on input
+    # print "\n"
+    # user_input = raw_input("Press any key to get second hypervisor details: ")
+    #
+    # # View VTEP Hypervisor #2 details
+    # overlay_manager.get_hypervisor_details(vtep_hvsrB)
 
     # wait on input
     print "\n"

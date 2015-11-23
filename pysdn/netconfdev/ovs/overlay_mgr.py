@@ -231,11 +231,12 @@ class Ovrly_mgr(Controller, object):
         status = OperStatus()
 
         url = self.get_ovrl_mgr_hvsr_vtep_config_url(vtep_hvsr)
-        var = '{{\"vteps\": [{{\"name\": \"{0}\",\"ip-address\":\"{1}\",\"configuration\": {{\"brocade-app-overlay-ovs-vtep:switch-name\": \"{2}\"}}}}'
+        var = '{{\"vteps\": [{{\"name\": \"{0}\",\"ip-address\":\"{1}\",\"configuration\": {{\"brocade-app-overlay-ovs-vtep:switch-name\": \"{2}\"}}}}]}}'
         payload = var.format(vtep_hvsr['vtep_hvsr_name'], vtep_hvsr['hvsrIp'], vtep_hvsr['switchName'])
         headers = {"content-type": "application/json", "accept": "application/json"}
 
         print(url)
+        print(payload)
 
         resp = self.http_put_request(url, payload, headers)
 
@@ -293,12 +294,13 @@ class Ovrly_mgr(Controller, object):
 
         url = self.get_ovrl_mgr_tunnel_hvsr2hvsr_config_url(tnl_name)
 
-        var = '{{\"tunnel\": [{{\"tunnel-name\": \"{0}\",\"vni-id\": \"{1}\",\"tunnel-endpoints\": [{{\"device-id\": \"{2}:{3}\",\"vtep-name\": \"{4}\"}},{{\"device-id/": \"{5}:{6}\",\"vtep-name\": \"{7}\"}}]}}'
+        var = '{{\"tunnel\": [{{\"tunnel-name\": \"{0}\",\"vni-id\": \"{1}\",\"tunnel-endpoints\": [{{\"device-id\": \"{2}:{3}\",\"vtep-name\": \"{4}\"}},{{\"device-id\": \"{5}:{6}\",\"vtep-name\": \"{7}\"}}]}}]}}'
         payload = var.format(tnl_name, vni_id,
                              vtep_hvsrA['hvsrIp'], vtep_hvsrA['hvsrPortNum'], vtep_hvsrA['vtep_hvsr_name'],
                              vtep_hvsrB['hvsrIp'], vtep_hvsrB['hvsrPortNum'], vtep_hvsrB['vtep_hvsr_name'])
         headers = {"content-type": "application/json", "accept": "application/json"}
 
+        print(url)
         print(payload)
 
         resp = self.http_put_request(url, payload, headers)

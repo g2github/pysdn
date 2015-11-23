@@ -55,7 +55,7 @@ Requirements
 
 5. To run the script        
         - From terminal type, 
-            $ ./ovly_mgr_script.py
+            $ python ./ovly_mgr_script.py
             
             Results:
             - The "ovrly_mgr_script will run the following operations in order...

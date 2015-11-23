@@ -21,7 +21,7 @@ switchName_2: "Switch2"
 
 # VTEPs
 vtepName_1: "vtep1"
-vtepName_2: "vtep2"
+vtepName_2: "vtep1"
 
 # VXLAN Identifiers
 vniId_1: 100
