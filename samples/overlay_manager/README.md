@@ -20,6 +20,7 @@ Requirements
                 
 3. To install pysdn # which contains the sample ovrly_manager_script
         $ git clone https://github.com/brocade/pysdn.git
+        $ python setup.py develop
         
 4. To setup the script for your environment
         $ cd /pysdn/samples/overlay_manager/

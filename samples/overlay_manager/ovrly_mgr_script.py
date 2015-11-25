@@ -53,7 +53,7 @@ if __name__ == "__main__":
     vtep_hvsrA['vtepName'] = doo['vtepName_1']
     vtep_hvsrA['hvsrName'] = doo['hvsrName_1']
     vtep_hvsrA['vtep_hvsr_name'] = doo['vtepName_1'] + doo['hvsrName_1']
-    vtep_hvsrA['switchName'] = doo['switchName_1'] + doo['hvsrName_1']
+    vtep_hvsrA['switchName'] = doo['switchName_1']
 
     # Configure VTEP 1 onto Hypervisor 1 and reference this set as vtep_hvsrA
     vtep_hvsrB['hvsrIp'] = doo['hvsrIp_2']
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     vtep_hvsrB['vtepName'] = doo['vtepName_2']
     vtep_hvsrB['hvsrName'] = doo['hvsrName_2']
     vtep_hvsrB['vtep_hvsr_name'] = doo['vtepName_1'] + doo['hvsrName_2']
-    vtep_hvsrB['switchName'] = doo['switchName_2'] + doo['hvsrName_2']
+    vtep_hvsrB['switchName'] = doo['switchName_2']
 
     # Instantiate the Overlay Manager
     overlay_manager = Ovrly_mgr(doo['ctrlIpAddr'], doo['ctrlPortNum'], doo['ctrlUname'],
