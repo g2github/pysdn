@@ -41,13 +41,10 @@ interfaces.py: Interface specific properties and access methods
 """
 
 import json
-import urllib2
 
 from pysdn.common.utils import (strip_none,
                                 remove_empty_from_dict,
                                 dict_keys_underscored_to_dashed)
-
-
 
 """
 interfaces {
@@ -176,8 +173,6 @@ class DataPlaneInterface():
     def get_url_extension(self):
         s = ("%s/%s/%s") % (self._mn1, self._mn2, self.tagnode)
         return s
-
-
 
 class OpenVpnInterface():
     ''' Class representing an OpenVPN tunnel interface '''

@@ -857,8 +857,6 @@ class VRouter5600(NetconfNode):
         model_ref = templateModelRef.format(ip_prefix.replace("/", "%2F"))
         return self.delete_protocols_cfg(model_ref)
 
-
-
     def add_modify_vif_instance(self, vifInstance, dpName):
         """Create a firewall on the VRouter5600.
          :param fwInstance: instance of the 'Firewall' class
