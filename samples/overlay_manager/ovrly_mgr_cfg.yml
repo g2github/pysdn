@@ -8,7 +8,10 @@ ctrlUname: "admin"
 ctrlPswd: "admin"
 ctrlTimeOut: "5"
 
-# Hypervisors
+# Overlay Tunnel #1 Configuration
+tunnelName_1: tunnel1
+
+# Hypervisors and Switches
 hvsrIp_1: 192.168.7.151
 hvsrPortNum_1: 16640
 hvsrName_1: "Hypervisor1"
@@ -25,6 +28,24 @@ vtepName_2: "vtep1"
 
 # VXLAN Identifiers
 vniId_1: 100
+
+# Overlay Tunnel #2 Configuration
+# Hypervisors and Switches
+tunnelName_2: tunnel2
+
+hvsrIp_3: 192.168.7.161
+hvsrPortNum_3: 16640
+hvsrName_3: "Hypervisor3"
+switchName_3: "ovsbr300"
+
+hvsrIp_4: 192.168.7.162
+hvsrPortNum_4: 16640
+hvsrName_4: "Hypervisor4"
+switchName_4: "ovsbr400"
+
+# VTEPs
+vtepName_3: "vtep1"
+vtepName_4: "vtep1"
+
+# VXLAN Identifiers
 vniId_2: 200
-
-

@@ -21,58 +21,93 @@ Requirements
 3. To install pysdn # which contains the sample ovrly_manager_script
         $ git clone https://github.com/brocade/pysdn.git
         $ python setup.py develop
+
+4. The Overlay Manager Samples provide a collection of scripts that call upon the NETCONF device OVS drivers 
+   (pysdn/netconfdev/ovs/overlay_mgr.py).  These samples are based on a sample network configuration comprised of one
+   BSC controller, four hypervisors, ovs switches, and VTEPs.  The user is able to map these samples to their 
+   environment by editing a configuration file (pysdn/samples/overlay_manager/ovrly_mgr_cfg.yml) such that no code 
+   changes are required.  
         
-4. To setup the script for your environment
+5. To setup the sample scripts for your environment
         $ cd /pysdn/samples/overlay_manager/
         $ chmod +x ovrly_mgr_script.py
-
-        - Edit the following file /pysdnc/samples/overlay_manager/ovrly_mgr.yml
+        - Edit the following file /pysdnc/samples/overlay_manager/ovrly_mgr_cfg.yml
 
             # Controller
-            ctrlIpAddr: <env-ip-addr>
+            ctrlIpAddr: 192.168.7.153
             ctrlPortNum: 8181
             ctrlUname: "admin"
             ctrlPswd: "admin"
             ctrlTimeOut: "5"
             
-            # Hypervisors
-            hvsrIp_1: <env-hypervisor_ip-addr-1>
-            hvsrPortNum_1: 16640
-            hvsrName_1: "Hypervisor1"  # you can change this name 
-            switchName_1: "Switch1"    # you can change this name
+            # Overlay Tunnel #1 Configuration
+            tunnelName_1: tunnel1
             
-            hvsrIp_2: <env-hypervisor_ip-addr-2>
+            # Hypervisors and Switches
+            hvsrIp_1: 192.168.7.151
+            hvsrPortNum_1: 16640
+            hvsrName_1: "Hypervisor1"
+            switchName_1: "ovsbr100"
+            
+            hvsrIp_2: 192.168.7.152
             hvsrPortNum_2: 16640
-            hvsrName_2: "Hypervisor2"  # you can change this name
-            switchName_2: "Switch2"    # you can change this name
+            hvsrName_2: "Hypervisor2"
+            switchName_2: "ovsbr200"
             
             # VTEPs
-            vtepName_1: "vtep1"        # you can change this name
-            vtepName_2: "vtep2"        # you can change this name
+            vtepName_1: "vtep1"
+            vtepName_2: "vtep1
             
             # VXLAN Identifiers
-            vniId_1: 100               # you can change this id number
-            vniId_2: 200               # you can change this id number
-
-5. To run the script        
-        - From terminal type, 
-            $ python ./ovly_mgr_script.py
+            vniId_1: 100
             
-            Results:
-            - The "ovrly_mgr_script will run the following operations in order...
-                1. Register the first hypervisor (#1)
-                2. Register the second hypervisor (#2)
-                3. Register vtep #1 on the first hypervisor (#1)
-                4. Register vtep #2 on the second hypervisor (#2)
-                5. Build a tunnel between the two VTEPs
-                6. Get details of the first hypervisor (#1)
-                7. Get details of the second hypervisor (#2)
-                8. Delete the first hypervisor (#1)
-                9. Delete the second hypervisor (#2)
-            - The user will be prompted to enter any key to initiate each operation before running it
-            - The user will see RESTCONF response codes, as well as some RESTCONF parameters displayed 
-        
-        
+            # Overlay Tunnel #2 Configuration
+            # Hypervisors and Switches
+            tunnelName_2: tunnel2
+            
+            hvsrIp_3: 192.168.7.161
+            hvsrPortNum_3: 16640
+            hvsrName_3: "Hypervisor3"
+            switchName_3: "ovsbr300"
+            
+            hvsrIp_4: 192.168.7.162
+            hvsrPortNum_4: 16640
+            hvsrName_4: "Hypervisor4"
+            switchName_4: "ovsbr400"
+            
+            # VTEPs
+            vtepName_3: "vtep1"
+            vtepName_4: "vtep1"
+            
+            # VXLAN Identifiers
+            vniId_2: 200
+
+5. There are four Overlay Manager Sample scripts that perform VTEP and associated resource setup and deletion, and 
+   overlay tunnel setup and deletion.  Two files provide configuration file support routines.  These files are all
+   located in pysdn/samples/overlay_manager, and are as follows
+   1) overly_mgr_cfg.yml - Sample resource configuration
+   2) overly_mgr_cfg.py - Sample resource configuration file supporting routines
+   3) create_vteps.py - Sets up tunnel VTEPs and associated resources.  Expects at least a single command line 
+                        parameter, --tnl with value tnl#1 or tnl#2 depending upon which tunnel setup is desired.
+                        An optional second command line parameter, --log with values INFO or DEBUG may also be provided
+                        if troubleshooting or general flow visibility is required or desired.
+                        Example: $ python ./create_vteps.py --tnl tnl#1 --log=DEBUG
+   4) delete_vteps.py - Deletes tunnel VTEPs and associated resources.  Expects at least a single command line
+                        parameter, --tnl with value tnl#1 or tnl#2 depending upon which tunnel setup is desired.  An 
+                        optional second command line parameter, --log with values INFO or DEBUG may also be provided
+                        if troubleshooting or general flow visibility is required or desired.
+                        Example: $ python ./delete_vteps.py --tnl tnl#1 --log=INFO
+   5) build_tunnel.py - Builds a tunnel.  Expects at least a single command line parameter, --tnl with value tnl#1 or 
+                        tnl#2 depending upon which tunnel setup is desired.  An optional second command line parameter, 
+                        --log with values INFO or DEBUG may also be provided if troubleshooting or general flow 
+                        visibility is required or desired.
+                        Example: $ python ./build_tunnel.py --tnl tnl#1
+   6) delete_tunnel.py - Deletes a tunnel.  Expects at least a single command line parameter, --tnl with value tnl#1 or 
+                         tnl#2 depending upon which tunnel setup is desired.  An optional second command line parameter, 
+                         --log with values INFO or DEBUG may also be provided if troubleshooting or general flow 
+                         visibility is required or desired.
+                         Example: $ python ./delete_tunnel.py --tnl tnl#1 --log=INFO
+         
         
         
 

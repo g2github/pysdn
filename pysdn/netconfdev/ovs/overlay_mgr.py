@@ -39,6 +39,8 @@ controller.py: BSC Overlay Manager Application's properties and communication me
 
 """
 
+import logging
+
 from pysdn.common.result import Result
 from pysdn.common.status import OperStatus, STATUS
 from pysdn.controller.controller import Controller
@@ -48,6 +50,23 @@ from pysdn.controller.controller import Controller
 class Ovrly_mgr(Controller, object):
     def __init__(self, ipAddr, portNum, adminName, adminPassword, timeout):
         super(Ovrly_mgr, self).__init__(ipAddr, portNum, adminName, adminPassword, timeout=5)
+
+        # create logger
+        logger = logging.getLogger("ovr_mgr_sample")
+        logger.setLevel(logging.INFO)
+
+        # create console handler and set level to DEBUG
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.INFO)
+
+        # create formatter
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+        # add formatter to ch
+        ch.setFormatter(formatter)
+
+        # add ch to logger
+        logger.addHandler(ch)
 
     def get_ovrl_mgr_hvsr_config_url(self, hvsr_ip, hvr_port):
         templateUrl = "http://{}:{}/restconf/config/brocade-app-overlay:devices/device/{}:{}"
@@ -91,7 +110,6 @@ class Ovrly_mgr(Controller, object):
      """
 
     def register_hypervisor(self, vtep_hvsr):
-
         status = OperStatus()
 
         url = self.get_ovrl_mgr_hvsr_config_url(vtep_hvsr['hvsrIp'], vtep_hvsr['hvsrPortNum'])
@@ -100,11 +118,12 @@ class Ovrly_mgr(Controller, object):
                              vtep_hvsr['hvsrPortNum'])
         headers = {"content-type": "application/json", "accept": "application/json"}
 
-        print(payload)
+        logging.debug(url)
+        logging.debug(payload)
 
         resp = self.http_put_request(url, payload, headers)
 
-        print(resp)
+        logging.info(resp)
 
         if resp is None:
             status.set_status(STATUS.CONN_ERROR)
@@ -141,11 +160,12 @@ class Ovrly_mgr(Controller, object):
         headers = {"content-type": "application/json", "accept": "application/json"}
         timeout = None
 
-        print(url)
+        logging.debug(url)
+        logging.debug(payload)
 
         resp = self.http_get_request(url, payload, headers, timeout)
 
-        print(resp)
+        logging.info(resp)
 
         if resp is None:
             status.set_status(STATUS.CONN_ERROR)
@@ -182,9 +202,12 @@ class Ovrly_mgr(Controller, object):
         payload = None
         headers = {"content-type": "application/json", "accept": "application/json"}
 
+        logging.debug(url)
+        logging.debug(payload)
+
         resp = self.http_delete_request(url, payload, headers)
 
-        print(resp)
+        logging.info(resp)
 
         if resp is None:
             status.set_status(STATUS.CONN_ERROR)
@@ -235,12 +258,12 @@ class Ovrly_mgr(Controller, object):
         payload = var.format(vtep_hvsr['vtep_hvsr_name'], vtep_hvsr['hvsrIp'], vtep_hvsr['switchName'])
         headers = {"content-type": "application/json", "accept": "application/json"}
 
-        print(url)
-        print(payload)
+        logging.debug(url)
+        logging.debug(payload)
 
         resp = self.http_put_request(url, payload, headers)
 
-        print(resp)
+        logging.info(resp)
 
         if resp is None:
             status.set_status(STATUS.CONN_ERROR)
@@ -293,19 +316,18 @@ class Ovrly_mgr(Controller, object):
         status = OperStatus()
 
         url = self.get_ovrl_mgr_tunnel_hvsr2hvsr_config_url(tnl_name)
-
         var = '{{\"tunnel\": [{{\"tunnel-name\": \"{0}\",\"vni-id\": \"{1}\",\"tunnel-endpoints\": [{{\"device-id\": \"{2}:{3}\",\"vtep-name\": \"{4}\"}},{{\"device-id\": \"{5}:{6}\",\"vtep-name\": \"{7}\"}}]}}]}}'
         payload = var.format(tnl_name, vni_id,
                              vtep_hvsrA['hvsrIp'], vtep_hvsrA['hvsrPortNum'], vtep_hvsrA['vtep_hvsr_name'],
                              vtep_hvsrB['hvsrIp'], vtep_hvsrB['hvsrPortNum'], vtep_hvsrB['vtep_hvsr_name'])
         headers = {"content-type": "application/json", "accept": "application/json"}
 
-        print(url)
-        print(payload)
+        logging.debug(url)
+        logging.debug(payload)
 
         resp = self.http_put_request(url, payload, headers)
 
-        print(resp)
+        logging.info(resp)
 
         if resp is None:
             status.set_status(STATUS.CONN_ERROR)
@@ -318,6 +340,47 @@ class Ovrly_mgr(Controller, object):
 
         return Result(status, None)
 
+    """
+    ---------------------------------------
+    Delete a tunnel between two hypervisors
+    ---------------------------------------
+    HTTP Method: DELETE
+    URL: http://<CONTROLLER_IP>:8181/restconf/config/brocade-app-overlay:tunnels/tunnel/tunnelHypHyp/
+
+     :params:
+            - tnl_name: Tunnel name
+
+     :return: Configuration status of the node.
+     :rtype: None or :class:`pybvc.common.status.OperStatus`
+            - STATUS.CONN_ERROR: If the controller did not respond.
+            - STATUS.CTRL_INTERNAL_ERROR: If the controller responded but did not provide any status.
+     """
+
+    def delete_tunnel_between_two_hypervisors(self, tnl_name):
+
+        status = OperStatus()
+
+        url = self.get_ovrl_mgr_tunnel_hvsr2hvsr_config_url(tnl_name)
+        payload = None
+        headers = {"content-type": "application/json", "accept": "application/json"}
+
+        logging.debug(url)
+        logging.debug(payload)
+
+        resp = self.http_delete_request(url, payload, headers)
+
+        logging.info(resp)
+
+        if resp is None:
+            status.set_status(STATUS.CONN_ERROR)
+        elif resp.content is None:
+            status.set_status(STATUS.CTRL_INTERNAL_ERROR)
+        elif resp.status_code == 200:
+            status.set_status(STATUS.NODE_CONFIGURED)
+        else:
+            status.set_status(STATUS.DATA_NOT_FOUND, resp)
+
+        return Result(status, None)
     """
     -------------------------------
     Delete a VTEP from a hypervisor
@@ -345,11 +408,12 @@ class Ovrly_mgr(Controller, object):
         payload = None
         headers = {"content-type": "application/json", "accept": "application/json"}
 
-        print(url)
+        logging.debug(url)
+        logging.debug(payload)
 
         resp = self.http_delete_request(url, payload, headers)
 
-        print(resp)
+        logging.info(resp)
 
         if resp is None:
             status.set_status(STATUS.CONN_ERROR)
