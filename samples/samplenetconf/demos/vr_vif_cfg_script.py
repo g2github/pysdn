@@ -104,7 +104,6 @@ if __name__ == "__main__":
         print ("!!!Script terminated, reason: %s" % status.detailed())
         exit(0)
 
-
     if node_configured is False:
         result = ctrl.add_netconf_node(vrouter)
         status = result.get_status()

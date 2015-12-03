@@ -54,8 +54,6 @@ interfaces {
 }
 """
 
-
-
 class DataPlaneInterface():
     ''' Class representing a dataplane interface '''
     _mn1 = "vyatta-interfaces:interfaces"
@@ -166,7 +164,7 @@ class DataPlaneInterface():
         obj1 = strip_none(obj)
         obj2 = remove_empty_from_dict(obj1)
 #        obj3 = dict_keys_underscored_to_dashed(obj2)
-        payload = {self._mn1: [obj2]}
+        payload = {self._mn2: [obj2]}
         return json.dumps(payload, default=lambda o: o.__dict__,
                           sort_keys=True, indent=4)
 

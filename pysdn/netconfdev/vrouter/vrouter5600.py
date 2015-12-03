@@ -505,12 +505,53 @@ class VRouter5600(NetconfNode):
             status.set_status(STATUS.HTTP_ERROR, resp)
         return Result(status, cfg)
 
+    def set_dataplane_interface_cfg(self, dpInstance):
+        """ Return the configuration for a dataplane interface
+            on the VRouter5600
+         :param string ifName: The interface name of the interface for which
+                              configuration should be returned
+        :return: A tuple: Status, configuration of dataplane interface
+        :rtype: instance of the `Result` class (containing configuration data)
+         - STATUS.CONN_ERROR: If the controller did not respond.
+        - STATUS.CTRL_INTERNAL_ERROR: If the controller responded but did not
+                                      provide any status.
+        - STATUS.OK: Success. Result is valid.
+        - STATUS.HTTP_ERROR: If the controller responded with an error
+                             status code.
+        """
+        status = OperStatus()
+        ctrl = self.ctrl
+        myname = self.name
+        url = ctrl.get_ext_mount_config_url(myname)
+        headers = {"content-type": "application/json", "accept": "application/json"}
+        payload = dpInstance.get_payload()
+        url_ext = dpInstance.get_url_extension()
+        url += url_ext
+
+        print url
+        print payload
+        print headers
+
+        resp = ctrl.http_put_request(url, payload, headers)
+        print(resp)
+
+        if(resp is None):
+            status.set_status(STATUS.CONN_ERROR)
+        elif(resp.content is None):
+            status.set_status(STATUS.CTRL_INTERNAL_ERROR)
+        elif (resp.status_code == 200):
+            cfg = resp.content
+            status.set_status(STATUS.OK)
+        else:
+            status.set_status(STATUS.HTTP_ERROR, resp)
+        return Result(status, None)
+
     def set_dataplane_interface_vif_cfg(self, vif):
         status = OperStatus()
         ctrl = self.ctrl
         myname = self.name
         url = ctrl.get_ext_mount_config_url(myname)
-        headers = {'content-type': 'application/yang.data+json'}
+        headers = {"content-type": "application/json", "accept": "application/json"}
         payload = vif.get_payload()
         url_ext = vif.get_url_extension()
         url += url_ext
@@ -892,3 +933,31 @@ class VRouter5600(NetconfNode):
         else:
             status.set_status(STATUS.HTTP_ERROR, resp)
         return Result(status, None)
+
+    def set_protocols_ospf(self, ospf):
+            status = OperStatus()
+            ctrl = self.ctrl
+            headers = {'content-type': 'application/yang.data+json'}
+            url = ctrl.get_ext_mount_config_url(self.name)
+            obj = ospf
+            payload = obj.get_payload()
+            ext = ospf.get_url_extension()
+            url += ext
+
+            print(url)
+            print(headers)
+            print(payload)
+
+            resp = ctrl.http_put_request(url, payload, headers)
+
+            print(resp)
+
+            if(resp is None):
+                status.set_status(STATUS.CONN_ERROR)
+            elif(resp.content is None):
+                status.set_status(STATUS.CTRL_INTERNAL_ERROR)
+            elif (resp.status_code == 200 or resp.status_code == 204):
+                status.set_status(STATUS.OK)
+            else:
+                status.set_status(STATUS.HTTP_ERROR, resp)
+            return Result(status, None)

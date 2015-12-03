@@ -54,19 +54,19 @@
 # environment setup (please take a look at NOTE in above)
 
 # Controller
-ctrlIpAddr: 192.0.2.168
+ctrlIpAddr: 192.168.7.153
 ctrlPortNum: 8181
-ctrlUname: "name"
-ctrlPswd: "password"
+ctrlUname: "admin"
+ctrlPswd: "admin"
 
 # NETCONF device
 # (It is expected by the scripts that the device is accessible on the network
 #  if this configuration is used)
-nodeName: "deviceName"
-nodeIpAddr: 203.0.113.11
+nodeName: "vr5600-1"
+nodeIpAddr: 192.168.7.20
 nodePortNum: 830
-nodeUname: "name"
-nodePswd: "password"
+nodeUname: "vyatta"
+nodePswd: "vyatta"
 
 # NETCONF device interfaces
 # (Make sure these interfaces are configured on the device)

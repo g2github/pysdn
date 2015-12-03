@@ -183,3 +183,50 @@ class NextHopInterface():
 
     def set_distance(self, value):
         self.distance = value
+
+
+class Ospf():
+    ''' Class representing OSPF parameters '''
+    _mn1 = "vyatta-protocols:protocols"
+    _mn2 = "vyatta-protocols-ospf:ospf"
+
+    def __init__(self):
+        # set protocols ospf parameters { abr-type type | opaque-lsa | rfc1583-compatibility | router-id ipv4 }
+        self.parameters = []
+
+        #  set protocols ospf area
+        self.area = []
+
+    def set_ospf_parameters(self, ospf_param):
+        self.parameters.append(ospf_param)
+
+    def set_ospf_area(self, ospf_area):
+        self.area.append(ospf_area)
+
+    def to_string(self):
+        """ Return this object as a string """
+        return str(vars(self))
+
+    def to_json(self):
+        """ Return this object as JSON """
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True,
+                          indent=4)
+
+    def get_payload(self):
+        s = self.to_json()
+        obj = json.loads(s)
+        obj1 = strip_none(obj)
+        obj2 = remove_empty_from_dict(obj1)
+        obj3 = dict_keys_underscored_to_dashed(obj2)
+        payload = {self._mn2: obj3}
+        return json.dumps(payload, default=lambda o: o.__dict__,
+                          sort_keys=True, indent=4)
+
+    def get_url_extension(self):
+        s = ("%s/%s") % (self._mn1, self._mn2)
+        return s
+
+
+
+
+
