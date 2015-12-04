@@ -44,8 +44,9 @@ ospfArea3_1: 0.0.0.0
 ospfNetwork3_1: 10.0.0.11/32
 ospfArea4_1: 0.0.0.1
 ospfNetwork4_1: 192.168.11.0/24
-ospfPsvIf_1: dp0s6
+ospfPsvIf_1: dp0p224p1 #dp0s6
 
+# HOLD OFF
 #  ibgp to datacenter A
 #  set protocols bgp 100 parameters router-id 10.0.0.11
 #  set protocols bgp 100 neighbor 10.0.0.22 nexthop-self
@@ -68,7 +69,7 @@ bgpAddrFam_1: "ipv4-unicast"
 
 #  ******************CPE2*********************************************************
 nodeName_2: "vr5600-CPE2"         # Specify this name at vr-cfg --vr command line to provision CPE2 VR
-nodeIpAddr_2: 192.168.7.21  #10.252.30.203
+nodeIpAddr_2: 192.168.7.20  #10.252.30.203
 nodePortNum_2: 830
 nodeUname_2: "vyatta"
 nodePswd_2: "vyatta"
@@ -88,10 +89,14 @@ dp2Addr_2: 192.168.12.1/24
 #  set protocols ospf area 0.0.0.0 network 10.0.0.12/32
 #  set protocols ospf area 0.0.0.2 network 192.168.12.0/24
 #  set protocols ospf passive-interface dp0s6
-#
-#
-#
-#
+ospfParamRouterId_2: 10.0.0.12
+ospfArea1_2: 0.0.0.0
+ospfNetwork1_2: 192.168.21.0/24
+ospfArea2_2: 0.0.0.0
+ospfNetwork2_2: 10.0.0.12/32
+ospfArea3_2: 0.0.0.2
+ospfNetwork3_2: 192.168.12.0/24
+ospfPsvIf_2: dp0p224p1
 
 # HOLD OFF
 #  ******************Datacenter A**********************************************************
@@ -119,6 +124,7 @@ ospfParams-RouterId_1: 10.0.0.22
 ospfArea-0000-1_1: 192.168.21.0/24
 ospfArea-0000-2_1: 10.0.0.22/32
 
+# HOLD OFF
 #  ibgp ro CPE1
 #  set protocols bgp 100 parameters routerÅ-id 10.0.0.22
 #  set protocols bgp 100 neighbor 10.0.0.11 nexthop-self
@@ -129,6 +135,7 @@ ospfArea-0000-2_1: 10.0.0.22/32
 #
 #
 #
+# HOLD OFF
 #  ebgp to Juniper MX
 #  set protocols bgp neighbor X.X.X.X remote-as 300
 #  set protocols bgp 100 neighbor X.X.X.X addressÅ-family ipv4Å-unicast
