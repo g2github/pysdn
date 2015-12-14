@@ -89,6 +89,52 @@ def read_in_vr_cfg_file():
 
     return d
 
+def set_bgp_cfg_1(ctrl, vr_cfg_params):
+    templateUrl = ("http://{}:{}/restconf/config/"
+                    "opendaylight-inventory:nodes/node/{}/"
+                   "yang-ext:mount/"
+                   "vyatta-protocols:protocols/vyatta-protocols-ospf:ospf")
+    url = templateUrl.format(vr_cfg_params['ctrlIpAddr'], vr_cfg_params['ctrlPortNum'], vr_cfg_params['nodeName_1'])
+
+    var = ''
+    {
+        "vyatta-protocols-bgp:bgp": [
+            {
+                "tagnode": {},
+                "neighbor": [
+                    {
+                        "tagnode": "{}",
+                        "remote-as": {},
+                        "address-family": {
+                            "{}": {}
+                        },
+                        "update-source": "{}"
+                    }
+                ],
+                "parameters": {
+                    "router-id": "{}"
+                }
+            }
+        ]
+  }
+
+    payload = var.format(vr_cfg_params['bgpGroup_1'],
+                         vr_cfg_params['bgpNbr1_1'],
+                         vr_cfg_params['bgpRemoteAS_1'],
+                         vr_cfg_params['bgpNbrAddrFam1_1'],
+                         vr_cfg_params['bgpUpdateSrc_1'],
+                         vr_cfg_params['bgpParamsRtrId1_1'])
+    headers = {"content-type": "application/json", "accept": "application/json"}
+
+    logging.info(url)
+    logging.info(payload)
+
+    resp = ctrl.http_put_request(url, payload, headers)
+
+    logging.info(resp)
+
+
+
 def set_loopback_interface_1(ctrl, vr_cfg_params):
     templateUrl = ("http://{}:{}/restconf/config/"
                     "opendaylight-inventory:nodes/node/{}/"
@@ -114,10 +160,28 @@ def set_loopback_interface_2(ctrl, vr_cfg_params):
                     "opendaylight-inventory:nodes/node/{}/"
                    "yang-ext:mount/"
                    "vyatta-interfaces:interfaces/vyatta-interfaces-loopback:loopback/{}")
-    url = templateUrl.format(vr_cfg_params['ctrlIpAddr'], vr_cfg_params['ctrlPortNum'], vr_cfg_params['nodeName_1'], vr_cfg_params['lpbkName_1'])
+    url = templateUrl.format(vr_cfg_params['ctrlIpAddr'], vr_cfg_params['ctrlPortNum'], vr_cfg_params['nodeName_2'], vr_cfg_params['lpbkName_2'])
 
     var = '{{\"vyatta-interfaces-loopback:loopback\": [{{\"tagnode\": \"{}\",\"address\": [\"{}\"]}}]}}'
     payload = var.format(vr_cfg_params['lpbkName_2'], vr_cfg_params['lpbkAddr_2'])
+    headers = {"content-type": "application/json", "accept": "application/json"}
+
+    logging.info(url)
+    logging.info(payload)
+
+    resp = ctrl.http_put_request(url, payload, headers)
+
+    logging.info(resp)
+
+def set_loopback_interface_3(ctrl, vr_cfg_params):
+    templateUrl = ("http://{}:{}/restconf/config/"
+                    "opendaylight-inventory:nodes/node/{}/"
+                   "yang-ext:mount/"
+                   "vyatta-interfaces:interfaces/vyatta-interfaces-loopback:loopback/{}")
+    url = templateUrl.format(vr_cfg_params['ctrlIpAddr'], vr_cfg_params['ctrlPortNum'], vr_cfg_params['nodeName_3'], vr_cfg_params['lpbkName_3'])
+
+    var = '{{\"vyatta-interfaces-loopback:loopback\": [{{\"tagnode\": \"{}\",\"address\": [\"{}\"]}}]}}'
+    payload = var.format(vr_cfg_params['lpbkName_3'], vr_cfg_params['lpbkAddr_3'])
     headers = {"content-type": "application/json", "accept": "application/json"}
 
     logging.info(url)
@@ -135,7 +199,14 @@ def set_ospf_cfg_1(ctrl, vr_cfg_params):
                    "vyatta-protocols:protocols/vyatta-protocols-ospf:ospf")
     url = templateUrl.format(vr_cfg_params['ctrlIpAddr'], vr_cfg_params['ctrlPortNum'], vr_cfg_params['nodeName_1'])
     var = '{{\"vyatta-protocols-ospf:ospf\": {{\"passive-interface\": [\"{}"],\"area\": [{{\"tagnode\": \"{}\",\"network\": [\"{}\"]}},{{\"tagnode\": \"{}\",\"network\": [\"{}\",\"{}\",\"{}\"]}}],\"parameters\": {{\"router-id\": \"{}\"}}}}}}'
-    payload = var.format(vr_cfg_params['ospfPsvIf_1'], vr_cfg_params['ospfArea4_1'], vr_cfg_params['ospfNetwork4_1'], vr_cfg_params['ospfArea3_1'], vr_cfg_params['ospfNetwork3_1'], vr_cfg_params['ospfNetwork2_1'], vr_cfg_params['ospfNetwork1_1'], vr_cfg_params['ospfParamRouterId_1'],)
+    payload = var.format(vr_cfg_params['ospfPsvIf_1'],
+                         vr_cfg_params['ospfArea4_1'],
+                         vr_cfg_params['ospfNetwork4_1'],
+                         vr_cfg_params['ospfArea3_1'],
+                         vr_cfg_params['ospfNetwork3_1'],
+                         vr_cfg_params['ospfNetwork2_1'],
+                         vr_cfg_params['ospfNetwork1_1'],
+                         vr_cfg_params['ospfParamRouterId_1'])
     headers = {"content-type": "application/json", "accept": "application/json"}
 
     logging.info(url)
@@ -153,7 +224,14 @@ def set_ospf_cfg_2(ctrl, vr_cfg_params):
     url = templateUrl.format(vr_cfg_params['ctrlIpAddr'], vr_cfg_params['ctrlPortNum'], vr_cfg_params['nodeName_2'])
 
     var = '{{\"vyatta-protocols-ospf:ospf\": {{\"passive-interface\": [\"{}\"],\"area\": [{{\"tagnode\": \"{}\",\"network\": [\"{}\"]}},{{\"tagnode\": \"{}\",\"network\": [\"{}\",\"{}\"]}}],\"parameters\": {{\"router-id\": \"10.0.0.12\"}}}}}}'
-    payload = var.format(vr_cfg_params['ospfPsvIf_2'], vr_cfg_params['ospfArea3_2'], vr_cfg_params['ospfNetwork3_2'], vr_cfg_params['ospfNetwork2_2'], vr_cfg_params['ospfArea1_2'], vr_cfg_params['ospfNetwork1_2'], vr_cfg_params['ospfNetwork2_2'], vr_cfg_params['ospfParamRouterId_2'])
+    payload = var.format(vr_cfg_params['ospfPsvIf_2'],
+                         vr_cfg_params['ospfArea3_2'],
+                         vr_cfg_params['ospfNetwork3_2'],
+                         vr_cfg_params['ospfArea1_2'],
+                         vr_cfg_params['ospfNetwork2_2'],
+                         vr_cfg_params['ospfNetwork1_2'],
+                         vr_cfg_params['ospfNetwork2_2'],
+                         vr_cfg_params['ospfParamRouterId_2'])
     headers = {"content-type": "application/json", "accept": "application/json"}
 
     logging.info(url)
@@ -163,6 +241,26 @@ def set_ospf_cfg_2(ctrl, vr_cfg_params):
 
     logging.info(resp)
 
+def set_ospf_cfg_3(ctrl, vr_cfg_params):
+    templateUrl = ("http://{}:{}/restconf/config/"
+                    "opendaylight-inventory:nodes/node/{}/"
+                   "yang-ext:mount/"
+                   "vyatta-protocols:protocols/vyatta-protocols-ospf:ospf")
+    url = templateUrl.format(vr_cfg_params['ctrlIpAddr'], vr_cfg_params['ctrlPortNum'], vr_cfg_params['nodeName_3'])
+
+    var = '{{\"vyatta-protocols-ospf:ospf\": {{\"area\": [{{\"tagnode\": \"{1}\",\"network\": [\"{2}\",\"{3}\"]}}],\"parameters\": {{\"router-id\": "{4}"}}}}'
+    payload = var.format(vr_cfg_params['ospfArea1_3'],
+                         vr_cfg_params['ospfNetwork1_3'],
+                         vr_cfg_params['ospfNetwork2_3'],
+                         vr_cfg_params['ospfParamRouterId_3'])
+    headers = {"content-type": "application/json", "accept": "application/json"}
+
+    logging.info(url)
+    logging.info(payload)
+
+    resp = ctrl.http_put_request(url, payload, headers)
+
+    logging.info(resp)
 
 def do_vr_cfg_1(vr_cfg_params):
     logging.info("in do_vr_cfg_1 for %s", vr_cfg_params['nodeName_1'])
@@ -221,6 +319,7 @@ def do_vr_cfg_1(vr_cfg_params):
     vrouter.set_dataplane_interface_cfg(dp3_1)
 
     set_ospf_cfg_1(ctrl, vr_cfg_params)
+    set_bgp_cfg_1(ctrl, vr_cfg_params)
 
     sys.exit(0)
 
@@ -257,7 +356,7 @@ def do_vr_cfg_2(vr_cfg_params):
             logging.info ("!!!Demo terminated, reason: %s" % status.detailed())
             exit(0)
 
-    result = ctrl.check_node_conn_status(vr_cfg_params['nodeName_1'])
+    result = ctrl.check_node_conn_status(vr_cfg_params['nodeName_2'])
     status = result.get_status()
     if status.eq(STATUS.NODE_CONNECTED):
         logging.info ("<<< '%s' is connected to the Controller" % vr_cfg_params['nodeName_2'])
@@ -291,6 +390,22 @@ def do_vr_cfg_3(vr_cfg_params):
     logging.info ("<<< 'Controller': %s, '%s': %s"
            % (vr_cfg_params['ctrlIpAddr'], vr_cfg_params['nodeName_3'], vr_cfg_params['nodeIpAddr_3']))
 
+    #  set interfaces loopback lo address 10.0.0.22/32
+    #  set interfaces dataplane dp0s3 address 192.168.21.2/24
+    #  set interfaces dataplane dp0s6 address 10.252.30.206/30
+
+    set_loopback_interface_3(ctrl, vr_cfg_params)
+
+    dp1_3 = DataPlaneInterface(vr_cfg_params['dp1Name_3'])
+    dp1_3.set_address(vr_cfg_params['dp1Addr_3'])
+    vrouter.set_dataplane_interface_cfg(dp1_3)
+
+    dp2_3 = DataPlaneInterface(vr_cfg_params['dp2Name_3'])
+    dp2_3.set_address(vr_cfg_params['dp2Addr_3'])
+    vrouter.set_dataplane_interface_cfg(dp2_3)
+
+    set_ospf_cfg_3(ctrl, vr_cfg_params)
+
     sys.exit(0)
 
 if __name__ == "__main__":
@@ -308,6 +423,7 @@ if __name__ == "__main__":
 
     doo = read_in_vr_cfg_file()
 
+    args.vr = doo['nodeName_2']
 
     if args.vr == doo['nodeName_1']:
         do_vr_cfg_1(doo)

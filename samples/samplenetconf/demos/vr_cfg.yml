@@ -54,17 +54,22 @@ ospfPsvIf_1: dp0p224p1 #dp0s6
 #  set protocols bgp 100 neighbor 10.0.0.22 update-source 10.0.0.11
 #  set protocols bgp 100 neighbor 10.0.0.22 address-family ipv4-unicast
 bgpGroup_1: 100
-bgpNbr_1: 10.0.0.22
+bgpParamsRtrId1_1: 10.0.0.11
+bgpNbr1_1: 10.0.0.22
 bgpNxtHop_1: "nexthop-self"
 bgpRemoteAS_1: 100
 bgpUpdateSrc_1: 10.0.0.11
-bgpAddrFam_1: "ipv4-unicast"
+bgpNbrAddrFam1_1: "ipv4-unicast"
 
 # HOLD OFF
 #  ebgp to customer
 #  set protocols bgp neighbor X.X.X.X remote-as 100
 #  set protocols bgp 100 neighbor X.X.X.X address-family ipv4-unicast
 #  set protocols bgp 100 address-family ipv4-unicast network x.x.x.x/24 (Any local netowrks that we want to advertise)
+bgpNbr2_1: x.x.x.x
+bgpNbrAddrFam2_1: "ipv4-unicast"
+bgpNeighborAddrFamNetwork2_1: x.x.x.x/24
+
 
 
 #  ******************CPE2*********************************************************
@@ -79,8 +84,8 @@ nodePswd_2: "vyatta"
 #  set interfaces dataplane dp0s6 address 192.168.12.1/24
 lpbkName_2: lo
 lpbkAddr_2: 10.0.0.12/32
-dp1Name_2: dp0s3
-dp1Addr_2: 192.168.21.1/24
+dp1Name_2: dp0p224p1
+dp1Addr_2: 224.100.8.31/24 #192.168.21.1/24
 dp2Name_2: dp0s6
 dp2Addr_2: 192.168.12.1/24
 
@@ -101,7 +106,7 @@ ospfPsvIf_2: dp0p224p1
 # HOLD OFF
 #  ******************Datacenter A**********************************************************
 nodeName_3: "vr5600-Datacenter A" # Specify this name at vr-cfg --vr command line to provision Datacenter A VR
-nodeIpAddr_3: 192.168.7.21
+nodeIpAddr_3: 192.168.7.20
 nodePortNum_3: 830
 nodeUname_3: "vyatta"
 nodePswd_3: "vyatta"
@@ -132,16 +137,25 @@ ospfArea-0000-2_1: 10.0.0.22/32
 #  set protocols bgp 100 neighbor 10.0.0.11 address-family ipv4-unicast
 #  set protocols bgp 100 neighbor 10.0.0.11 address-family ipv4-unicast routeÅ-reflectorÅ-client
 #  set protocols bgp 100 neighbor 10.0.0.11 update-source 10.0.0.22
-#
-#
+bgpGroup_1: 100
+bgpParams-RouterId_1: 10.0.0.22
+bgbNeighbor1_1: 10.0.0.11
+bgpNeighborRemoteAs1_1: 100
+bgpNeighborAddrFam1_1: "ipv4-unicast"
+bgpNeighborAddrFamIpv4Unicast1_1: "route-reflector-client"
+bgpNeighborUpdateSrc_1: 10.0.0.22
+
 #
 # HOLD OFF
 #  ebgp to Juniper MX
 #  set protocols bgp neighbor X.X.X.X remote-as 300
 #  set protocols bgp 100 neighbor X.X.X.X addressÅ-family ipv4Å-unicast
 #  set protocols bgp 100 address-family ipv4-unicast network x.x.x.x/24 (Any local netowrks that we want to advertise)
-#
-#
+bgbNeighbor2_1: x.x.x.x
+bgbNeighborRemoteAs2_1: 300
+bgpNeighborAddrFam2_1: "ipv4-unicast"
+bgpNeighborAddrFamNetwork2_1: x.x.x.x/24
+
 #  ----------------------------------------------------------------------------------------
 #
 #
